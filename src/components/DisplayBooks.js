@@ -1,8 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-const DisplayBooks = ({ props, updateHandler }) => {
-  const { id, imageLinks, status, title, authors } = props;
+import PropTypes from "prop-types";
+const DisplayBooks = ({ book, updateHandler }) => {
+  const { id, imageLinks, status, title, authors } = book;
+  DisplayBooks.prototype = {
+    id: PropTypes.number,
+    status: PropTypes.string,
+    title: PropTypes.string,
+    authors: PropTypes.array,
+    imageLinks: PropTypes.string,
+    updateHandler: PropTypes.func
+  }
   const ALL_STATUS = ["Currently reading", "Want to read", "Read", "none"];
 
   return (
@@ -10,10 +18,8 @@ const DisplayBooks = ({ props, updateHandler }) => {
       <li>
         <div className="book">
           <div className="book-top">
-            <div className="book-cover">
-              {" "}
+            <div className="book-cover">        
               <Link to={`/book/${id}`}>
-                {" "}
                 <img src={imageLinks} />{" "}
               </Link>
             </div>

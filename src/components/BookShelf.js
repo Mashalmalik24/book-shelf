@@ -1,24 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { MY_BOOKS } from "../data";
 import DisplayBooks from "./DisplayBooks";
 
 const INITIAL_STATE = ["Currently reading", "Want to read", "Read"];
-const BookShelf = () => {
-  const [allBooksState, setAllBooksState] = useState(MY_BOOKS);
 
+const reducer = (state, action) => {
+  switch(action.type){
+    case "add":
+      let temp = [...state]
+      console.log(temp)
+      temp[action.payload.index]={...temp[action.payload.index], status: action.payload.value}
+      console.log(temp)
+      return temp
+    default :
+        return state
+    }
+}
+
+const BookShelf = () => {
+  const [state, dispatch] = useReducer(reducer, MY_BOOKS)
   const updateHandler = (value, index) => {
-    let tempArray = allBooksState.map((item) => {
-      if (item.id === index) {
-        return {
-          ...item,
-          status: value,
-        };
+
+    for(var i = 0; i < state.length; i++){
+      if(state[i].id === index){
+        dispatch({type: "add", payload: {value:value, index:i} })
+      }else{
+        dispatch({type: "", payload: value })
       }
-      return {
-        ...item,
-      };
-    });
-    setAllBooksState(tempArray);
+    }
   };
   return (
     <>
@@ -28,12 +37,12 @@ const BookShelf = () => {
             <div className="bookshelf-title">{items}</div>
             <div className="bookshelf-books">
               <div className="books-grid">
-                {allBooksState.map((item) => {
+                {state?.map((item) => {
                   if (item.status === items) {
                     return (
                       <DisplayBooks
                         updateHandler={updateHandler}
-                        props={item}
+                        book={item}
                       />
                     );
                   }
@@ -45,6 +54,8 @@ const BookShelf = () => {
       </div>
     </>
   );
-};
+}
 
-export default BookShelf;
+export default BookShelf
+
+
